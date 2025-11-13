@@ -40,11 +40,11 @@ const Navbar = () => {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-2">
-                        <img
+                        {/* <img
                             src="https://i.ibb.co/VmX711W/images-removebg-preview.png"
                             alt="Logo"
                             className="h-12 w-auto object-contain"
-                        />
+                        /> */}
                         <span className="hidden sm:block font-bold text-lg text-teal-700">Bookistry</span>
                     </Link>
 
