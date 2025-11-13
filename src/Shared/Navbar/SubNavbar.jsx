@@ -1,4 +1,4 @@
-// SubNavbar.jsx
+
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa6";
 
 const SubNavbar = () => {
