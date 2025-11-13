@@ -6,6 +6,7 @@ import Banner from '../Banner/Banner';
 import BookCategory from '../BookCatagory/BookCatagory';
 import Discount from '../Discount/Discount';
 import Advertise from '../Advertise/Advertise';
+import Feedback from '../Feedback/Feedback';
 
 const Home = () => {
     return (
@@ -15,6 +16,7 @@ const Home = () => {
         {/* <PopularBooks></PopularBooks> */}
         <Discount></Discount>
         <Advertise></Advertise>
+        <Feedback></Feedback>
         </div>
     );
 };

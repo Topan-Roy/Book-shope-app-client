@@ -1,4 +1,4 @@
-// Navbar.jsx
+
 import { CiSearch } from "react-icons/ci";
 import { FaCartShopping } from "react-icons/fa6";
 import { IoMenuSharp } from "react-icons/io5";
