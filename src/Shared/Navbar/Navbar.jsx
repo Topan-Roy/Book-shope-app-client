@@ -24,7 +24,7 @@ const Navbar = () => {
         { path: "/books", label: "Books" },
         { path: "/author", label: "Author" },
         { path: "/about", label: "About" },
-        { path: "/blog", label: "Blog" },
+        { path: "/bloge", label: "Blog" },
         { path: "/contact", label: "Contact" },
     ];
 
