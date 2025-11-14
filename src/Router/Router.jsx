@@ -9,6 +9,7 @@ import BlogDetails from "../Pages/Bloge/BlogDetails";
 import Author from "../Pages/Author/Author";
 import Login from "../Authprovider/Login/Login";
 import Registration from "../Authprovider/Registation/Registation";
+import NotFound from "../Shared/NotFound/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +48,11 @@ export const router = createBrowserRouter([
         path: "registation",
        Component:Registration
       },
+       
     ]
+  },
+   {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
