@@ -6,6 +6,7 @@ import Contact from "../Pages/Contact/Contact";
 import About from "../Pages/About/About";
 import Bloge from "../Pages/Bloge/Bloge";
 import BlogDetails from "../Pages/Bloge/BlogDetails";
+import Author from "../Pages/Author/Author";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
         {
         path: "bloge/blogdetails/:id",
        Component:BlogDetails
+      },
+        {
+        path: "author",
+       Component:Author
       },
     ]
   },
