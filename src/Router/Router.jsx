@@ -7,6 +7,8 @@ import About from "../Pages/About/About";
 import Bloge from "../Pages/Bloge/Bloge";
 import BlogDetails from "../Pages/Bloge/BlogDetails";
 import Author from "../Pages/Author/Author";
+import Login from "../Authprovider/Login/Login";
+import Registration from "../Authprovider/Registation/Registation";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +38,14 @@ export const router = createBrowserRouter([
         {
         path: "author",
        Component:Author
+      },
+        {
+        path: "login",
+       Component:Login
+      },
+        {
+        path: "registation",
+       Component:Registration
       },
     ]
   },
