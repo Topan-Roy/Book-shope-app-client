@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaPencil } from "react-icons/fa6";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Loading from "../../Components/Loading/Loading";
 
 
 const authorsData = [
@@ -40,7 +41,7 @@ const Author = () => {
   }, []);
 
   if (isLoading) {
-    return <p className="text-center mt-20 text-xl font-semibold">Loading...</p>;
+    return <Loading></Loading>;
   }
 
   // Filter authors by first letter match

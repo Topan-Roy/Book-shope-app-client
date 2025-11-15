@@ -45,7 +45,7 @@ const Navbar = () => {
                             alt="Logo"
                             className="h-12 w-auto object-contain"
                         /> */}
-                        <span className="hidden sm:block font-bold text-lg text-teal-700">Bookistry</span>
+                        <span className=" font-bold text-2xl text-teal-700">Bookistry</span>
                     </Link>
 
                     {/* Desktop Search */}

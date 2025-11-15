@@ -30,7 +30,7 @@ const Bloge = () => {
     <div className="w-full md:px-10 px-4">
       <div className="relative bg-white w-full">
         {/* Banner Image */}
-        <div className="w-full relative">
+        <div className="w-full h-60 sm:h-80 md:h-64 relative">
           <img
             src="https://i.ibb.co.com/QjXHqBQk/IMG-0324.jpg"
             alt="Bookshelf"
@@ -40,7 +40,7 @@ const Bloge = () => {
 
         {/* Profile */}
         <div className="flex items-center px-6 mt-[-35px]">
-          <div className="w-20 mt-10 h-20 rounded-full shadow-xl border-4 border-white overflow-hidden">
+          <div className="w-16 h-16 sm:w-20 z-20 sm:h-20 rounded-full border-4 border-white overflow-hidden shadow-lg">
             <img
               src="https://i.ibb.co.com/yj93nHG/image.png"
               alt="Profile"
