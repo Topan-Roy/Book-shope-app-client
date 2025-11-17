@@ -49,6 +49,7 @@ const Navbar = () => {
         { path: "/about", label: "About" },
         { path: "/bloge", label: "Blog" },
         { path: "/contact", label: "Contact" },
+        { path: "/addbook", label: "AddBook" },
     ];
 
     return (
@@ -95,7 +96,7 @@ const Navbar = () => {
                                     className=" lg:flex items-center gap-1 px-3 py-2 bg-gray-100 rounded-full hover:bg-gray-200"
                                 >
                                     <FaUserCircle className="text-2xl text-gray-700" />
-                                    <span className="  text-gray-700">{user.email.split("@")[0]}</span>
+                                    {/* <span className="  text-gray-700">{user.email.split("@")[0]}</span> */}
                                 </button>
 
                                 {profileOpen && (

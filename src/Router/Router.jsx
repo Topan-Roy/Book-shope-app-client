@@ -10,6 +10,8 @@ import Author from "../Pages/Author/Author";
 import Login from "../Authprovider/Login/Login";
 import Registration from "../Authprovider/Registation/Registation";
 import NotFound from "../Shared/NotFound/NotFound";
+import Books from "../Pages/Books/Books";
+import AddBook from "../Pages/Books/AddBook";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +49,14 @@ export const router = createBrowserRouter([
         {
         path: "registation",
        Component:Registration
+      },
+        {
+        path: "books",
+       Component:Books
+      },
+        {
+        path: "addbook",
+       Component:AddBook
       },
        
     ]
