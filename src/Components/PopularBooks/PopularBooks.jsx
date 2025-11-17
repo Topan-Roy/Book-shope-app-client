@@ -41,7 +41,7 @@ const PopularBooks = ({ popularBooks }) => {
             >
               {/* Image */}
               <img
-                src={book.image}
+                src={book.img}
                 className="w-56 h-72 object-cover rounded-xl mb-3 hover:scale-105 transition-transform"
               />
 
