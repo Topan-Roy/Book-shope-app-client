@@ -87,18 +87,60 @@ const Books = () => {
     setMinRating(0);
   };
 
-  const handleWishlistToggle = (e, bookId, title) => {
+  const handleWishlistToggle = async (e, book) => {
     e.preventDefault();
     e.stopPropagation();
-    const current = !!wishlistedIds[bookId];
-    setWishlistedIds((prev) => ({ ...prev, [bookId]: !current }));
-    Swal.fire({
-      icon: "success",
-      title: current ? "Removed from Wishlist" : "Added to Wishlist",
-      text: current ? `${title} removed.` : `${title} added.`,
-      timer: 1500,
-      showConfirmButton: false,
-    });
+
+    if (!user || !user.email) {
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login to add books to your wishlist.",
+        confirmButtonColor: "#0d9488",
+      });
+      return;
+    }
+
+    const bookId = book._id;
+    const isWishlisted = !!wishlistedIds[bookId];
+
+    if (isWishlisted) {
+      // Remove from wishlist
+      try {
+        const wishlistId = wishlistedIds[bookId]; // stored as { id: mongoId }
+        await axiosPublic.delete(`/wishlist/${wishlistId}`);
+        setWishlistedIds((prev) => {
+          const updated = { ...prev };
+          delete updated[bookId];
+          return updated;
+        });
+        Swal.fire({ icon: "info", title: "Removed from Wishlist", timer: 1200, showConfirmButton: false });
+      } catch {
+        Swal.fire({ icon: "error", title: "Failed to remove", timer: 1200, showConfirmButton: false });
+      }
+    } else {
+      // Add to wishlist
+      try {
+        const res = await axiosPublic.post("/wishlist", {
+          email: user.email,
+          bookId: book._id,
+          title: book.title,
+          author: book.author,
+          price: book.price,
+          img: book.img,
+        });
+        if (res.data?.success) {
+          setWishlistedIds((prev) => ({ ...prev, [bookId]: res.data.id }));
+          Swal.fire({ icon: "success", title: "Added to Wishlist ❤️", timer: 1200, showConfirmButton: false });
+        }
+      } catch (err) {
+        if (err.response?.status === 409) {
+          Swal.fire({ icon: "info", title: "Already in Wishlist", timer: 1200, showConfirmButton: false });
+        } else {
+          Swal.fire({ icon: "error", title: "Failed to add", timer: 1200, showConfirmButton: false });
+        }
+      }
+    }
   };
 
   const handleAddToCart = (e, book) => {
@@ -281,7 +323,7 @@ const Books = () => {
                         />
                         {/* Wishlist button */}
                         <button
-                          onClick={(e) => handleWishlistToggle(e, b._id, b.title)}
+                          onClick={(e) => handleWishlistToggle(e, b)}
                           className="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white shadow-md border border-gray-100 flex items-center justify-center text-slate-400 hover:text-red-500 hover:scale-105 transition-all z-10"
                         >
                           {wishlistedIds[b._id] ? (
