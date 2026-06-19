@@ -1,5 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaPlus, FaMinus, FaUsers, FaBook, FaPenFancy, FaAward } from "react-icons/fa";
+
+// Lightweight custom CountUp component using IntersectionObserver
+const CountUp = ({ end, duration = 2000, suffix = "", decimals = 0 }) => {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let start = 0;
+    const endValue = parseFloat(end);
+    if (isNaN(endValue)) return;
+    if (start === endValue) return;
+
+    const incrementTime = 30; // ms
+    const totalSteps = duration / incrementTime;
+    const increment = (endValue - start) / totalSteps;
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= endValue) {
+        clearInterval(timer);
+        setCount(endValue);
+      } else {
+        setCount(start);
+      }
+    }, incrementTime);
+
+    return () => clearInterval(timer);
+  }, [isVisible, end, duration]);
+
+  // Format with commas: e.g. 12,000
+  const formattedCount = count.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  return <span ref={elementRef}>{formattedCount}{suffix}</span>;
+};
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -24,10 +79,10 @@ const FAQ = () => {
   ];
 
   const stats = [
-    { id: 1, icon: <FaUsers />, value: "12,000+", label: "Happy Readers" },
-    { id: 2, icon: <FaBook />, value: "5,500+", label: "Book Collections" },
-    { id: 3, icon: <FaPenFancy />, value: "150+", label: "Famous Authors" },
-    { id: 4, icon: <FaAward />, value: "99.8%", label: "Satisfaction Rate" },
+    { id: 1, icon: <FaUsers />, end: 12000, suffix: "+", label: "Happy Readers" },
+    { id: 2, icon: <FaBook />, end: 5500, suffix: "+", label: "Book Collections" },
+    { id: 3, icon: <FaPenFancy />, end: 150, suffix: "+", label: "Famous Authors" },
+    { id: 4, icon: <FaAward />, end: 99.8, suffix: "%", decimals: 1, label: "Satisfaction Rate" },
   ];
 
   const toggleAccordion = (index) => {
@@ -46,7 +101,13 @@ const FAQ = () => {
             <span className="text-3xl text-teal-400 mb-3 group-hover:scale-110 transition-transform">
               {stat.icon}
             </span>
-            <h3 className="text-2xl md:text-3xl font-black">{stat.value}</h3>
+            <h3 className="text-2xl md:text-3xl font-black">
+              <CountUp
+                end={stat.end}
+                suffix={stat.suffix}
+                decimals={stat.decimals || 0}
+              />
+            </h3>
             <p className="text-teal-300/70 text-xs font-semibold uppercase tracking-wider mt-1">
               {stat.label}
             </p>
