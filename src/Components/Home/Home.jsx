@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Banner from '../Banner/Banner';
+import Features from '../Features/Features';
 import BookCategory from '../BookCatagory/BookCatagory';
 import Discount from '../Discount/Discount';
 import Advertise from '../Advertise/Advertise';
@@ -38,6 +39,7 @@ const Home = () => {
     return (
         <div>
             <Banner />
+            <Features />
             <BookCategory />
             <PopularBooks popularBooks={popularBooks} />
             <RelizonBook religiousBooks={religiousBooks} />
