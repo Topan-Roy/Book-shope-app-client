@@ -11,7 +11,7 @@ const Bloge = () => {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    fetch("/blog.json")
+    fetch(`/blog.json?t=${Date.now()}`)
       .then((res) => res.json())
       .then((data) => {
         setBlogs(data);

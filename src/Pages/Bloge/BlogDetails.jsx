@@ -8,7 +8,7 @@ export default function BlogDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/blog.json")
+    fetch(`/blog.json?t=${Date.now()}`)
       .then((res) => res.json())
       .then((data) => {
         setBlogs(data);
