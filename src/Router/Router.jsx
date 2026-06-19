@@ -12,6 +12,8 @@ import Registration from "../Authprovider/Registation/Registation";
 import NotFound from "../Shared/NotFound/NotFound";
 import Books from "../Pages/Books/Books";
 import AddBook from "../Pages/Books/AddBook";
+import BookDetails from "../Pages/Books/BookDetails";
+import Cart from "../Pages/Cart/Cart";
 
 export const router = createBrowserRouter([
   {
@@ -55,8 +57,16 @@ export const router = createBrowserRouter([
        Component:Books
       },
         {
+        path: "book/:id",
+       Component:BookDetails
+      },
+        {
         path: "addbook",
        Component:AddBook
+      },
+        {
+        path: "cart",
+       Component:Cart
       },
        
     ]

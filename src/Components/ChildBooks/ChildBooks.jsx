@@ -3,19 +3,19 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router";
-import { FaStar, FaTimes, FaShoppingCart, FaBookOpen } from "react-icons/fa";
+import { FaStar, FaTimes, FaShoppingCart, FaBookOpen, FaChild } from "react-icons/fa";
 import Loading from "../../Components/Loading/Loading";
 import { AuthContext } from "../../Contexts/AuthProvider";
 import useAxios from "../../Hook/useAxios";
 import Swal from "sweetalert2";
 import CartToast from "../CartToast/CartToast";
 
-const RelizonBook = ({ religiousBooks }) => {
+const ChildBooks = ({ childBooks }) => {
   const { user } = useContext(AuthContext);
   const axiosInstance = useAxios();
   const [selectedBook, setSelectedBook] = useState(null);
   const [addingToCart, setAddingToCart] = useState(false);
-  const [toast, setToast] = useState(null); // { book }
+  const [toast, setToast] = useState(null);
 
   const handleAddToCart = (book) => {
     if (!user || !user.email) {
@@ -23,7 +23,7 @@ const RelizonBook = ({ religiousBooks }) => {
         icon: "warning",
         title: "Login Required",
         text: "Please login first to add books to cart.",
-        confirmButtonColor: "#0d9488",
+        confirmButtonColor: "#f97316",
       });
       return;
     }
@@ -43,8 +43,8 @@ const RelizonBook = ({ religiousBooks }) => {
       .then((res) => {
         if (res.data.insertedId) {
           window.dispatchEvent(new Event("cartUpdated"));
-          setToast({ book }); // show custom toast
-          setSelectedBook(null); // close modal if open
+          setToast({ book });
+          setSelectedBook(null);
         }
       })
       .catch(() => {
@@ -59,7 +59,7 @@ const RelizonBook = ({ religiousBooks }) => {
     slidesToShow: 5,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 2200,
     pauseOnHover: true,
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 3 } },
@@ -68,10 +68,10 @@ const RelizonBook = ({ religiousBooks }) => {
     ],
   };
 
-  if (!religiousBooks) return <Loading />;
+  if (!childBooks) return <Loading />;
 
   return (
-    <div className="mb-20 bg-[#f7f6f6] px-2 py-4">
+    <div className="mb-20 bg-[#fff8f0] px-2 py-4">
 
       {/* Custom Cart Toast */}
       {toast && (
@@ -80,70 +80,85 @@ const RelizonBook = ({ religiousBooks }) => {
 
       {/* Header */}
       <div className="flex px-4 items-center justify-between mb-8">
-        <h2 className="text-xl lg:text-4xl font-semibold text-black">Religious Books</h2>
-        <div className="border-t-2 border-gray-300 w-[25%] md:w-[60%] lg:w-[65%] mt-4"></div>
+        <h2 className="text-xl lg:text-4xl font-semibold text-black flex items-center gap-3">
+          <span className="text-orange-500">
+            <FaChild />
+          </span>
+          Children's Books
+        </h2>
+        <div className="border-t-2 border-orange-200 w-[20%] md:w-[55%] lg:w-[60%] mt-1"></div>
         <div>
           <Link to="/books">
-            <button className="btn rounded-3xl bg-[#F65D4E] text-white px-8">View All</button>
+            <button className="btn rounded-3xl bg-orange-500 text-white px-8 hover:bg-orange-600 transition-colors">
+              View All
+            </button>
           </Link>
         </div>
       </div>
 
       {/* Slider */}
       <div className="slider-container px-4">
-        <Slider {...settings}>
-          {religiousBooks.map((book) => (
-            <div key={book._id} className="p-2 h-[410px]">
-              <div
-                onClick={() => setSelectedBook(book)}
-                className="rounded-xl overflow-hidden shadow-lg h-full flex flex-col cursor-pointer group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
-              >
-                {/* Image */}
-                <div className="relative overflow-hidden h-52">
-                  <img
-                    className="w-full h-full object-cover p-2 group-hover:scale-105 transition-transform duration-300"
-                    src={book.img}
-                    alt={book.title}
-                  />
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="bg-white/90 text-teal-700 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow">
-                      <FaBookOpen className="text-sm" /> View Details
-                    </span>
+        {childBooks.length === 0 ? (
+          <div className="text-center py-12 text-gray-400">
+            <FaChild className="text-5xl mx-auto mb-3 text-orange-200" />
+            <p className="text-lg font-medium">No children's books available yet.</p>
+          </div>
+        ) : (
+          <Slider {...settings}>
+            {childBooks.map((book) => (
+              <div key={book._id} className="p-2 h-[410px]">
+                <div
+                  onClick={() => setSelectedBook(book)}
+                  className="rounded-xl overflow-hidden shadow-lg h-full flex flex-col cursor-pointer group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  {/* Image */}
+                  <div className="relative overflow-hidden h-52">
+                    <img
+                      className="w-full h-full object-cover p-2 group-hover:scale-105 transition-transform duration-300"
+                      src={book.img}
+                      alt={book.title}
+                    />
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-orange-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="bg-white/90 text-orange-600 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow">
+                        <FaBookOpen className="text-sm" /> View Details
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Details */}
-                <div className="px-4 py-2 flex-grow bg-white">
-                  <p className="text-gray-500 text-xs">
-                    <strong>Author:</strong> {book.author}
-                  </p>
-                  <p className="font-bold text-gray-800 text-base mt-1 mb-1 truncate">
-                    {book.title}
-                  </p>
-                  <div className="flex justify-between mb-2 mt-1">
-                    <p className="text-teal-600 text-sm font-bold">৳{book.price}</p>
-                    <p className="text-gray-500 flex items-center gap-1 text-sm">
-                      {book.rating} <FaStar className="text-orange-400" />
+                  {/* Card Details */}
+                  <div className="px-4 py-2 flex-grow bg-white">
+                    <p className="text-gray-500 text-xs">
+                      <strong>Author:</strong> {book.author}
+                    </p>
+                    <p className="font-bold text-gray-800 text-base mt-1 mb-1 truncate">
+                      {book.title}
+                    </p>
+                    <div className="flex justify-between mb-2 mt-1">
+                      <p className="text-orange-500 text-sm font-bold">৳{book.price}</p>
+                      <p className="text-gray-500 flex items-center gap-1 text-sm">
+                        {book.rating} <FaStar className="text-orange-400" />
+                      </p>
+                    </div>
+                    <p className="text-gray-500 text-xs">
+                      <strong>Category:</strong> {book.category}
                     </p>
                   </div>
-                  <p className="text-gray-500 text-xs">
-                    <strong>Category:</strong> {book.category}
-                  </p>
-                </div>
 
-                {/* Add to Cart Button */}
-                <div className="px-4 pb-4 bg-white">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleAddToCart(book); }}
-                    className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 w-full rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
-                  >
-                    <FaShoppingCart className="text-sm" /> ADD TO CART
-                  </button>
+                  {/* Add to Cart Button */}
+                  <div className="px-4 pb-4 bg-white">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleAddToCart(book); }}
+                      className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 w-full rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                    >
+                      <FaShoppingCart className="text-sm" /> ADD TO CART
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        )}
       </div>
 
       {/* ===== Book Details Modal ===== */}
@@ -167,7 +182,7 @@ const RelizonBook = ({ religiousBooks }) => {
 
             <div className="flex flex-col md:flex-row">
               {/* Book Image Panel */}
-              <div className="md:w-2/5 bg-gradient-to-br from-teal-50 to-teal-100 flex items-center justify-center p-8 min-h-64">
+              <div className="md:w-2/5 bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-8 min-h-64">
                 <img
                   src={selectedBook.img}
                   alt={selectedBook.title}
@@ -178,7 +193,7 @@ const RelizonBook = ({ religiousBooks }) => {
               {/* Book Info Panel */}
               <div className="md:w-3/5 p-8 flex flex-col justify-between">
                 <div>
-                  <span className="inline-block bg-teal-100 text-teal-700 text-xs font-bold px-3 py-1 rounded-full mb-3">
+                  <span className="inline-block bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1 rounded-full mb-3">
                     {selectedBook.category}
                   </span>
                   <h2 className="text-2xl font-extrabold text-gray-800 leading-tight mb-2">
@@ -216,11 +231,13 @@ const RelizonBook = ({ religiousBooks }) => {
 
                 {/* Price + Button */}
                 <div className="border-t border-gray-100 pt-5 mt-4">
-                  <p className="text-3xl font-extrabold text-teal-600 mb-4">৳{selectedBook.price}</p>
+                  <p className="text-3xl font-extrabold text-orange-500 mb-4">
+                    ৳{selectedBook.price}
+                  </p>
                   <button
                     onClick={() => handleAddToCart(selectedBook)}
                     disabled={addingToCart}
-                    className="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:from-teal-600 hover:to-teal-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:from-orange-600 hover:to-orange-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {addingToCart ? (
                       <>
@@ -244,4 +261,4 @@ const RelizonBook = ({ religiousBooks }) => {
   );
 };
 
-export default RelizonBook;
+export default ChildBooks;

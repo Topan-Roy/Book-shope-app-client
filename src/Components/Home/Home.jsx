@@ -7,31 +7,44 @@ import Feedback from '../Feedback/Feedback';
 import axios from 'axios';
 import PopularBooks from '../PopularBooks/PopularBooks';
 import RelizonBook from '../RelizonBook/RelizonBook';
+import ChildBooks from '../ChildBooks/ChildBooks';
 
 const Home = () => {
     const [popularBooks, setPopularBooks] = useState([]);
-      const [religiousBooks, setReligiousBooks] = useState([]);
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/books?category=Popular")
-      .then((res) => setPopularBooks(res.data))
-      .catch((err) => console.log(err));
-  }, []);
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/books?category=Religious")
-      .then((res) => setReligiousBooks(res.data))
-      .catch((err) => console.log(err));
-  }, []);
+    const [religiousBooks, setReligiousBooks] = useState([]);
+    const [childBooks, setChildBooks] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get("http://localhost:3000/books?category=Popular")
+            .then((res) => setPopularBooks(res.data))
+            .catch((err) => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        axios
+            .get("http://localhost:3000/books?category=Religious")
+            .then((res) => setReligiousBooks(res.data))
+            .catch((err) => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        axios
+            .get("http://localhost:3000/books?category=Child")
+            .then((res) => setChildBooks(res.data))
+            .catch((err) => console.log(err));
+    }, []);
+
     return (
         <div>
-        <Banner></Banner>
-        <BookCategory></BookCategory>
-          <PopularBooks popularBooks={popularBooks} />
-          <RelizonBook religiousBooks={religiousBooks} />
-        <Discount></Discount>
-        <Advertise></Advertise>
-        <Feedback></Feedback>
+            <Banner />
+            <BookCategory />
+            <PopularBooks popularBooks={popularBooks} />
+            <RelizonBook religiousBooks={religiousBooks} />
+            <ChildBooks childBooks={childBooks} />
+            <Discount />
+            <Advertise />
+            <Feedback />
         </div>
     );
 };
