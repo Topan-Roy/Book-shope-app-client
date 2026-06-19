@@ -87,18 +87,85 @@ const Books = () => {
     setMinRating(0);
   };
 
-  const handleWishlistToggle = (e, bookId, title) => {
+  // Load wishlisted items for active user
+  useEffect(() => {
+    if (user && user.email) {
+      axiosPublic
+        .get(`/wishlist?email=${user.email}`)
+        .then((res) => {
+          const ids = {};
+          res.data.forEach((item) => {
+            ids[item.bookId] = true;
+          });
+          setWishlistedIds(ids);
+        })
+        .catch(console.error);
+    } else {
+      setWishlistedIds({});
+    }
+  }, [user, axiosPublic]);
+
+  const handleWishlistToggle = (e, book) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!user || !user.email) {
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login first to manage wishlist.",
+        confirmButtonColor: "#0d9488",
+      });
+      return;
+    }
+
+    const bookId = book._id;
     const current = !!wishlistedIds[bookId];
-    setWishlistedIds((prev) => ({ ...prev, [bookId]: !current }));
-    Swal.fire({
-      icon: "success",
-      title: current ? "Removed from Wishlist" : "Added to Wishlist",
-      text: current ? `${title} removed.` : `${title} added.`,
-      timer: 1500,
-      showConfirmButton: false,
-    });
+
+    if (current) {
+      // Remove from wishlist
+      axiosPublic
+        .delete(`/wishlist?email=${user.email}&bookId=${bookId}`)
+        .then(() => {
+          setWishlistedIds((prev) => {
+            const next = { ...prev };
+            delete next[bookId];
+            return next;
+          });
+          Swal.fire({
+            icon: "success",
+            title: "Removed from Wishlist",
+            text: `${book.title} removed.`,
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        })
+        .catch(console.error);
+    } else {
+      // Add to wishlist
+      const wishItem = {
+        email: user.email,
+        bookId,
+        title: book.title,
+        img: book.img,
+        price: book.price,
+        author: book.author,
+      };
+
+      axiosPublic
+        .post("/wishlist", wishItem)
+        .then(() => {
+          setWishlistedIds((prev) => ({ ...prev, [bookId]: true }));
+          Swal.fire({
+            icon: "success",
+            title: "Added to Wishlist",
+            text: `${book.title} added.`,
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        })
+        .catch(console.error);
+    }
   };
 
   const handleAddToCart = (e, book) => {
@@ -281,7 +348,7 @@ const Books = () => {
                         />
                         {/* Wishlist button */}
                         <button
-                          onClick={(e) => handleWishlistToggle(e, b._id, b.title)}
+                          onClick={(e) => handleWishlistToggle(e, b)}
                           className="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white shadow-md border border-gray-100 flex items-center justify-center text-slate-400 hover:text-red-500 hover:scale-105 transition-all z-10"
                         >
                           {wishlistedIds[b._id] ? (

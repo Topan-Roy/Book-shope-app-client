@@ -85,14 +85,40 @@ const Cart = () => {
 
   const handlePaymentSuccess = (transactionId) => {
     setPaymentSuccess(true);
-    // Clear cart after successful payment
-    const deletePromises = cartItems.map((item) =>
-      axiosInstance.delete(`/carts/${item._id}`)
-    );
-    Promise.all(deletePromises).then(() => {
-      window.dispatchEvent(new Event("cartUpdated"));
-      setCartItems([]);
-    });
+    
+    const orderData = {
+      email: user.email,
+      transactionId,
+      items: cartItems.map((item) => ({
+        bookId: item.bookId,
+        title: item.title,
+        price: item.price,
+        img: item.img,
+        author: item.author,
+        quantity: item.quantity || 1,
+      })),
+      total,
+      date: new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+      status: "Processing",
+    };
+
+    axiosInstance
+      .post("/orders", orderData)
+      .then(() => {
+        // Clear cart after successful payment
+        const deletePromises = cartItems.map((item) =>
+          axiosInstance.delete(`/carts/${item._id}`)
+        );
+        Promise.all(deletePromises).then(() => {
+          window.dispatchEvent(new Event("cartUpdated"));
+          setCartItems([]);
+        });
+      })
+      .catch((err) => console.error("Error creating order:", err));
   };
 
   const subtotal = cartItems.reduce(
