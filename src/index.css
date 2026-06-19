@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+/* Global rule to make sure all buttons have cursor-pointer */
+button, 
+[type="button"], 
+[type="reset"], 
+[type="submit"] {
+  cursor: pointer !important;
+}
