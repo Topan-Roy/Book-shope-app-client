@@ -5,6 +5,7 @@ import BookCategory from '../BookCatagory/BookCatagory';
 import Discount from '../Discount/Discount';
 import Advertise from '../Advertise/Advertise';
 import Feedback from '../Feedback/Feedback';
+import FAQ from '../FAQ/FAQ';
 import axios from 'axios';
 import PopularBooks from '../PopularBooks/PopularBooks';
 import RelizonBook from '../RelizonBook/RelizonBook';
@@ -46,6 +47,7 @@ const Home = () => {
             <ChildBooks childBooks={childBooks} />
             <Discount />
             <Advertise />
+            <FAQ />
             <Feedback />
         </div>
     );
