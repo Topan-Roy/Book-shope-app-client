@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaPaperPlane } from "react-icons/fa";
 import Swal from "sweetalert2";
+import useAxios from "../../Hook/useAxios";
 
 const Contact = () => {
+  const axiosPublic = useAxios();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,20 +30,34 @@ const Contact = () => {
       return;
     }
 
-    Swal.fire({
-      icon: "success",
-      title: "Inquiry Sent!",
-      text: `Thank you, ${formData.name}. We have received your inquiry regarding "${formData.interest}" and will contact you shortly.`,
-      confirmButtonColor: "#0d9488",
-    });
-
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      interest: "Select An Interest",
-      message: "",
-    });
+    axiosPublic
+      .post("/contacts", formData)
+      .then((res) => {
+        if (res.data.insertedId) {
+          Swal.fire({
+            icon: "success",
+            title: "Inquiry Sent!",
+            text: `Thank you, ${formData.name}. We have received your inquiry regarding "${formData.interest}" and will contact you shortly.`,
+            confirmButtonColor: "#0d9488",
+          });
+          setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            interest: "Select An Interest",
+            message: "",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error sending inquiry:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Submission Failed",
+          text: "Could not send inquiry. Please try again later.",
+          confirmButtonColor: "#d33",
+        });
+      });
   };
 
   return (
