@@ -1,115 +1,167 @@
 import { useState, useEffect } from "react";
 import Loading from "../../Components/Loading/Loading";
+import { FaStore, FaBook, FaMailBulk, FaHandsHelping } from "react-icons/fa";
 
 const About = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500); // 1.5 সেকেন্ড fake loading
+    const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
-    return (
-      <Loading></Loading>
-      
-    );
+    return <Loading />;
   }
 
   return (
-    <div className="lg:px-10 md:px-5 px-2 bg-[#f9f9f1] text-[#333] pb-12">
-      <div className="px-4">
-        <h1 className="text-3xl py-5">About Us</h1>
-        <h2 className="text-2xl font-bold">The Bookistry</h2>
-        <div className="mt-4 flex items-start flex-wrap">
-          <img
-            src="https://i.ibb.co.com/2hzVSbx/Imageby-Stanislav-Kondratievvia-Unsplash.webp"
-            className="md:w-4/4 rounded-lg shadow-lg mx-auto"
-            alt=""
-          />
-          <p className="text-gray-700 leading-relaxed md:text-xl">
-            Nestled in the heart of the city, The Bookistry is more than just a
-            bookstore – it’s a sanctuary for book lovers. Our shop is designed
-            to inspire curiosity and ignite your imagination, offering a
-            curated collection of books from all genres. Whether you’re
-            searching for the latest bestseller, a timeless classic, or a
-            hidden gem, we have something for everyone. <br />
-            Step inside and you’ll be greeted by the warm glow of soft lighting
-            and the comforting scent of books. Wooden shelves line the walls,
-            filled with carefully selected titles. A cozy reading nook with
-            plush armchairs invites you to sit down and lose yourself in a
-            story. For those who enjoy a good read with a cup of coffee, our
-            small coffee corner serves freshly brewed beverages and pastries.
-            <br />
-            At The Bookistry, we believe in the power of stories to connect,
-            inspire, and transform. Our mission is to create a welcoming space
-            where readers of all ages and backgrounds can come together to
-            explore, learn, and grow.
-            <br />
-            We’re located at <strong>2nd Floor Rifat Tower Tejgaon, Dhaka</strong>, open{" "}
-            <strong>Saturday - Thusday : 9:00 AM - 8:00 PM</strong>. Stop by and
-            discover your next great read. We can’t wait to welcome you to The
-            Bookistry.
+    <div className="min-h-screen bg-gray-50/50 pb-20 text-left">
+      {/* Hero Header Section */}
+      <div className="relative overflow-hidden bg-[#0f172a] text-white py-20 px-4">
+        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[120px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
+
+        <div className="max-w-6xl mx-auto text-center relative z-10">
+          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-teal-500/10 text-teal-400 text-xs font-bold uppercase tracking-widest border border-teal-500/20 mb-6">
+            Our Story
+          </span>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-4">
+            About <span className="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">The Bookistry</span>
+          </h1>
+          <p className="max-w-2xl mx-auto text-slate-400 text-sm md:text-base leading-relaxed">
+            Welcome to Dhaka's premier sanctuary for book lovers. Learn about our mission to support local bookstores and ignite curiosity.
           </p>
+        </div>
+      </div>
+
+      {/* Main Content Info Block */}
+      <div className="max-w-6xl mx-auto px-4 md:px-8 mt-16">
+        <div className="bg-white rounded-3xl border border-gray-100 p-8 md:p-12 shadow-sm flex flex-col lg:flex-row gap-12 items-center">
+          {/* Left image cover */}
+          <div className="w-full lg:w-1/2">
+            <img
+              src="https://i.ibb.co.com/2hzVSbx/Imageby-Stanislav-Kondratievvia-Unsplash.webp"
+              className="w-full h-80 object-cover rounded-2xl shadow-md hover:scale-[1.01] transition-transform duration-300"
+              alt="The Bookistry Bookstore"
+            />
+          </div>
+
+          {/* Right descriptions */}
+          <div className="w-full lg:w-1/2 space-y-5">
+            <h2 className="text-2xl md:text-3xl font-black text-slate-800">
+              A Bookstore Sanctuary
+            </h2>
+            <div className="h-1 w-20 bg-teal-500 rounded" />
+            
+            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              Nestled in the heart of the city, The Bookistry is more than just a
+              bookstore – it’s a sanctuary for book lovers. Our shop is designed
+              to inspire curiosity and ignite your imagination, offering a
+              curated collection of books from all genres.
+            </p>
+            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              Step inside and you’ll be greeted by the warm glow of soft lighting
+              and the comforting scent of books. A cozy reading nook with
+              plush armchairs invites you to sit down and lose yourself in a
+              story.
+            </p>
+            
+            <div className="bg-teal-50/50 rounded-2xl p-5 border border-teal-100/50 mt-6">
+              <p className="text-xs text-teal-800 font-semibold uppercase tracking-wider mb-2">Location & Timings</p>
+              <p className="text-slate-700 text-sm">
+                📍 <strong>2nd Floor Rifat Tower Tejgaon, Dhaka</strong>
+              </p>
+              <p className="text-slate-700 text-sm mt-1">
+                ⏰ <strong>Saturday - Thursday : 9:00 AM - 8:00 PM</strong> (Friday Closed)
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* How It Works Section */}
-        <div className="container mx-auto px-4 py-12 rounded-lg mt-8">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            How It Works
-            <span className="text-base font-normal block">
-              (and how your purchases help bookstores)
-            </span>
-          </h2>
+        <div className="mt-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-black text-slate-800 mb-3">How It Works</h2>
+            <p className="text-gray-500 text-sm md:text-base">
+              Discover how your purchases support our community of local bookstores.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Card 1 */}
-            <div className="bg-white rounded-lg shadow-md p-6 text-center">
-              <img
-                src="../../../public/62f53a0ab5f1511d391ec6ad_bouncing.gif"
-                alt="Pick a Store"
-                className="mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2">Pick A Store</h3>
-              <p className="text-gray-700">
-                Visit our <a href="#" className="text-blue-500 hover:underline">find a local bookstore</a> page and select the bookstore you'd like to support. If you don't choose a store, you'll contribute to our profit sharing pool that helps all our stores.
-              </p>
+            <div className="bg-white rounded-2xl border border-gray-100/80 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div className="text-center">
+                <div className="w-full h-36 bg-slate-50 rounded-xl overflow-hidden mb-4 flex items-center justify-center p-2">
+                  <img
+                    src="/62f53a0ab5f1511d391ec6ad_bouncing.gif"
+                    alt="Pick a Store"
+                    className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <h3 className="text-lg font-extrabold text-slate-800 mb-2 flex items-center justify-center gap-2">
+                  <FaStore className="text-teal-500 text-sm" /> Pick A Store
+                </h3>
+                <p className="text-gray-500 text-xs md:text-sm leading-relaxed text-left">
+                  Visit our local bookstore page and select the bookstore you'd like to support. If you don't choose a store, you'll contribute to our profit pool that helps all our stores.
+                </p>
+              </div>
             </div>
+
             {/* Card 2 */}
-            <div className="bg-white rounded-lg shadow-md p-6 text-center">
-              <img
-                src="../../../public/62f53a0ab5f15155621ec6b5_about2-p-500.jpg"
-                alt="Buy a Book"
-                className="mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2">Buy a Book</h3>
-              <p className="text-gray-700">
-                Your order will be filled directly by our distributor, and the full profit from your purchase will be sent to the bookstore you selected.
-              </p>
+            <div className="bg-white rounded-2xl border border-gray-100/80 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div className="text-center">
+                <div className="w-full h-36 bg-slate-50 rounded-xl overflow-hidden mb-4 flex items-center justify-center">
+                  <img
+                    src="/62f53a0ab5f15155621ec6b5_about2-p-500.jpg"
+                    alt="Buy a Book"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <h3 className="text-lg font-extrabold text-slate-800 mb-2 flex items-center justify-center gap-2">
+                  <FaBook className="text-teal-500 text-sm" /> Buy a Book
+                </h3>
+                <p className="text-gray-500 text-xs md:text-sm leading-relaxed text-left">
+                  Your order will be filled directly by our distributor, and the full profit from your purchase will be sent to the bookstore you selected.
+                </p>
+              </div>
             </div>
+
             {/* Card 3 */}
-            <div className="bg-white rounded-lg shadow-md p-6 text-center">
-              <img
-                src="../../../public/62f53a0ab5f151b01e1ec6af_about1-p-500.jpg"
-                alt="Check the Mail"
-                className="mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2">Check the Mail</h3>
-              <p className="text-gray-700">
-                You'll receive a confirmation and tracking number when your order is placed, and our in-house customer service team will be standing by if you have issues or returns.
-              </p>
+            <div className="bg-white rounded-2xl border border-gray-100/80 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div className="text-center">
+                <div className="w-full h-36 bg-slate-50 rounded-xl overflow-hidden mb-4 flex items-center justify-center">
+                  <img
+                    src="/62f53a0ab5f151b01e1ec6af_about1-p-500.jpg"
+                    alt="Check the Mail"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <h3 className="text-lg font-extrabold text-slate-800 mb-2 flex items-center justify-center gap-2">
+                  <FaMailBulk className="text-teal-500 text-sm" /> Check the Mail
+                </h3>
+                <p className="text-gray-500 text-xs md:text-sm leading-relaxed text-left">
+                  You'll receive a confirmation and tracking number when your order is placed, and our in-house customer service team will be standing by if you have issues or returns.
+                </p>
+              </div>
             </div>
+
             {/* Card 4 */}
-            <div className="bg-white rounded-lg shadow-md p-6 text-center">
-              <img
-                src="../../../public/62f53a0ab5f151fbbb1ec6b2_about3-p-500.jpg"
-                alt="Help Bookstores"
-                className="mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2">Help Bookstores</h3>
-              <p className="text-gray-700">
-                We donate profits directly to bookstores—both the funds from direct purchases and our profit pool that's split between our 2,000+ stores.
-              </p>
+            <div className="bg-white rounded-2xl border border-gray-100/80 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div className="text-center">
+                <div className="w-full h-36 bg-slate-50 rounded-xl overflow-hidden mb-4 flex items-center justify-center">
+                  <img
+                    src="/62f53a0ab5f151fbbb1ec6b2_about3-p-500.jpg"
+                    alt="Help Bookstores"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <h3 className="text-lg font-extrabold text-slate-800 mb-2 flex items-center justify-center gap-2">
+                  <FaHandsHelping className="text-teal-500 text-sm" /> Help Bookstores
+                </h3>
+                <p className="text-gray-500 text-xs md:text-sm leading-relaxed text-left">
+                  We donate profits directly to bookstores—both the funds from direct purchases and our profit pool that's split between our 2,000+ stores.
+                </p>
+              </div>
             </div>
           </div>
         </div>
