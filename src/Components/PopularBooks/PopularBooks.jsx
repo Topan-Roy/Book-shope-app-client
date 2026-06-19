@@ -94,14 +94,14 @@ const PopularBooks = ({ popularBooks }) => {
                 key={book._id}
                 data-aos="fade-up"
                 onClick={() => navigate(`/book/${book._id}`)}
-                className="bg-white rounded-3xl border border-gray-100 p-4 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-pointer group h-[450px] relative overflow-hidden"
+                className="bg-white rounded-3xl border border-gray-100 p-4 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-pointer group h-[400px] relative overflow-hidden"
               >
                 {/* Top thin line hover indicator */}
                 <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                 <div>
                   {/* Image Container with Badge */}
-                  <div className="relative overflow-hidden h-52 rounded-2xl bg-gray-50 flex items-center justify-center p-3">
+                  <div className="relative overflow-hidden h-44 rounded-2xl bg-gray-50 flex items-center justify-center p-3">
                     {/* Hot Badge */}
                     <span className="absolute top-3 left-3 bg-red-500 text-white text-[9px] uppercase font-extrabold tracking-widest px-2.5 py-1 rounded-full shadow-sm z-10">
                       Popular
@@ -122,16 +122,16 @@ const PopularBooks = ({ popularBooks }) => {
                   </div>
 
                   {/* Details */}
-                  <p className="text-xs text-teal-600 font-bold mt-4 mb-1 truncate">
+                  <p className="text-xs text-teal-600 font-bold mt-3 mb-1 truncate">
                     by {book.author}
                   </p>
 
-                  <h3 className="font-extrabold text-slate-800 text-sm leading-snug line-clamp-2 min-h-[40px] mb-2 group-hover:text-teal-600 transition-colors">
+                  <h3 className="font-extrabold text-slate-800 text-sm leading-snug line-clamp-2 min-h-[38px] mb-1.5 group-hover:text-teal-600 transition-colors">
                     {book.title}
                   </h3>
 
                   {/* Rating Stars */}
-                  <div className="flex items-center gap-0.5 text-orange-400 text-[10px] mb-2">
+                  <div className="flex items-center gap-0.5 text-orange-400 text-[10px] mb-1.5">
                     {[...Array(5)].map((_, i) => (
                       <FaStar
                         key={i}
