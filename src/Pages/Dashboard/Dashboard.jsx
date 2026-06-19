@@ -11,8 +11,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("profile");
   const [cartItems, setCartItems] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,21 +20,14 @@ const Dashboard = () => {
     }
 
     setLoading(true);
-    
-    // Fetch all user dashboard data concurrently
-    Promise.all([
-      axiosPublic.get(`/carts?email=${user.email}`),
-      axiosPublic.get(`/orders?email=${user.email}`),
-      axiosPublic.get(`/wishlist?email=${user.email}`)
-    ])
-      .then(([cartsRes, ordersRes, wishlistRes]) => {
-        setCartItems(cartsRes.data);
-        setOrders(ordersRes.data);
-        setWishlist(wishlistRes.data);
+    axiosPublic
+      .get(`/carts?email=${user.email}`)
+      .then((res) => {
+        setCartItems(res.data);
       })
-      .catch((err) => console.error("Error loading dashboard data:", err))
+      .catch((err) => console.error(err))
       .finally(() => setLoading(false));
-  }, [user, navigate, axiosPublic]);
+  }, [user, navigate]);
 
   const handleLogout = async () => {
     try {
@@ -54,25 +45,6 @@ const Dashboard = () => {
     }
   };
 
-  const handleRemoveWishlist = (e, bookId) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    axiosPublic
-      .delete(`/wishlist?email=${user.email}&bookId=${bookId}`)
-      .then(() => {
-        setWishlist((prev) => prev.filter((item) => item.bookId !== bookId));
-        Swal.fire({
-          icon: "success",
-          title: "Removed",
-          text: "Item removed from wishlist.",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-      })
-      .catch(console.error);
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -80,6 +52,16 @@ const Dashboard = () => {
       </div>
     );
   }
+
+  // Mock data for Dashboard stats and list
+  const mockOrders = [
+    { id: "ORD-9872", date: "June 18, 2026", total: "৳1,200", status: "Delivered" },
+    { id: "ORD-5431", date: "June 05, 2026", total: "৳450", status: "Processing" },
+  ];
+
+  const mockWishlist = [
+    { id: "1", title: "Atomic Habits", author: "James Clear", price: "500", img: "https://i.ibb.co.com/2hzVSbx/Imageby-Stanislav-Kondratievvia-Unsplash.webp" },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50/50 pb-20 text-left pt-10">
@@ -113,9 +95,9 @@ const Dashboard = () => {
             <nav className="flex flex-col gap-2">
               {[
                 { id: "profile", label: "My Profile", icon: <FaUser /> },
-                { id: "orders", label: `Order History (${orders.length})`, icon: <FaClipboardList /> },
-                { id: "wishlist", label: `My Wishlist (${wishlist.length})`, icon: <FaHeart /> },
-                { id: "cart", label: `Cart Summary (${cartItems.length})`, icon: <FaShoppingCart /> },
+                { id: "orders", label: "Order History", icon: <FaClipboardList /> },
+                { id: "wishlist", label: "My Wishlist", icon: <FaHeart /> },
+                { id: "cart", label: "Cart Summary", icon: <FaShoppingCart /> },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -193,48 +175,37 @@ const Dashboard = () => {
               <div className="space-y-6">
                 <h3 className="text-xl font-extrabold text-slate-800 flex items-center gap-2">
                   <span className="w-2 h-5 bg-teal-500 rounded-full inline-block" />
-                  Order History ({orders.length})
+                  Order History
                 </h3>
 
-                {orders.length === 0 ? (
-                  <div className="text-center py-12">
-                    <p className="text-gray-400 font-medium">You have not placed any orders yet.</p>
-                    <Link to="/books" className="inline-block mt-4 bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-2 rounded-xl text-xs transition-colors">
-                      Browse Books
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="bg-gray-50/70 border-b border-gray-100">
-                          <th className="px-6 py-4 text-xs font-bold uppercase text-slate-400 tracking-wider">Txn ID / Order ID</th>
-                          <th className="px-6 py-4 text-xs font-bold uppercase text-slate-400 tracking-wider">Date</th>
-                          <th className="px-6 py-4 text-xs font-bold uppercase text-slate-400 tracking-wider">Total</th>
-                          <th className="px-6 py-4 text-xs font-bold uppercase text-slate-400 tracking-wider">Status</th>
+                <div className="border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/70 border-b border-gray-100">
+                        <th className="px-6 py-4 text-xs font-bold uppercase text-slate-400 tracking-wider">Order ID</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase text-slate-400 tracking-wider">Date</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase text-slate-400 tracking-wider">Total</th>
+                        <th className="px-6 py-4 text-xs font-bold uppercase text-slate-400 tracking-wider">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 text-sm">
+                      {mockOrders.map((ord) => (
+                        <tr key={ord.id} className="hover:bg-gray-50/50 transition-colors">
+                          <td className="px-6 py-4 font-bold text-slate-800">{ord.id}</td>
+                          <td className="px-6 py-4 text-slate-500">{ord.date}</td>
+                          <td className="px-6 py-4 font-bold text-teal-600">{ord.total}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                              ord.status === "Delivered" ? "bg-green-50 text-green-700 border border-green-100" : "bg-orange-50 text-orange-700 border border-orange-100"
+                            }`}>
+                              {ord.status}
+                            </span>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-100 text-sm">
-                        {orders.map((ord) => (
-                          <tr key={ord._id} className="hover:bg-gray-50/50 transition-colors">
-                            <td className="px-6 py-4 font-bold text-slate-850 truncate max-w-[120px]" title={ord.transactionId}>
-                              {ord.transactionId}
-                            </td>
-                            <td className="px-6 py-4 text-slate-500">{ord.date}</td>
-                            <td className="px-6 py-4 font-bold text-teal-600">৳{ord.total}</td>
-                            <td className="px-6 py-4">
-                              <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                ord.status === "Delivered" ? "bg-green-50 text-green-700 border border-green-100" : "bg-orange-50 text-orange-700 border border-orange-100"
-                              }`}>
-                                {ord.status || "Processing"}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
 
@@ -243,47 +214,30 @@ const Dashboard = () => {
               <div className="space-y-6">
                 <h3 className="text-xl font-extrabold text-slate-800 flex items-center gap-2">
                   <span className="w-2 h-5 bg-teal-500 rounded-full inline-block" />
-                  My Wishlist ({wishlist.length})
+                  My Wishlist ({mockWishlist.length})
                 </h3>
 
-                {wishlist.length === 0 ? (
-                  <div className="text-center py-12">
-                    <p className="text-gray-400 font-medium">Your wishlist is empty.</p>
-                    <Link to="/books" className="inline-block mt-4 bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-2 rounded-xl text-xs transition-colors">
-                      Discover Books
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {wishlist.map((item) => (
-                      <div key={item._id} className="flex gap-4 p-4 border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative group">
-                        <div className="w-16 h-20 bg-gray-50 rounded-lg overflow-hidden shrink-0 flex items-center justify-center p-1">
-                          <img src={item.img} alt={item.title} className="max-h-full max-w-full object-contain" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {mockWishlist.map((item) => (
+                    <div key={item.id} className="flex gap-4 p-4 border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative">
+                      <div className="w-16 h-20 bg-gray-50 rounded-lg overflow-hidden shrink-0 flex items-center justify-center p-1">
+                        <img src={item.img} alt={item.title} className="max-h-full max-w-full object-contain" />
+                      </div>
+                      <div className="flex-1 min-w-0 flex flex-col justify-between">
+                        <div>
+                          <h4 className="font-extrabold text-slate-800 text-sm truncate leading-snug">{item.title}</h4>
+                          <p className="text-xs text-slate-400 mt-1">by {item.author}</p>
                         </div>
-                        <div className="flex-1 min-w-0 flex flex-col justify-between">
-                          <div>
-                            <h4 className="font-extrabold text-slate-800 text-sm truncate leading-snug">{item.title}</h4>
-                            <p className="text-xs text-slate-400 mt-1">by {item.author}</p>
-                          </div>
-                          <div className="flex items-center justify-between mt-2">
-                            <span className="text-teal-600 font-extrabold text-sm">৳{item.price}</span>
-                            <div className="flex gap-3">
-                              <button
-                                onClick={(e) => handleRemoveWishlist(e, item.bookId)}
-                                className="text-xs font-bold text-red-500 hover:text-red-600 underline"
-                              >
-                                Remove
-                              </button>
-                              <Link to={`/book/${item.bookId}`} className="text-xs font-bold text-teal-500 hover:text-teal-600 underline">
-                                View Book
-                              </Link>
-                            </div>
-                          </div>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-teal-600 font-extrabold text-sm">৳{item.price}</span>
+                          <Link to={`/book/${item.id}`} className="text-xs font-bold text-teal-500 hover:text-teal-600 underline">
+                            View Book
+                          </Link>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 

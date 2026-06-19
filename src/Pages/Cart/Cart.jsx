@@ -83,42 +83,39 @@ const Cart = () => {
     });
   };
 
-  const handlePaymentSuccess = (transactionId) => {
+  const handlePaymentSuccess = async (transactionId) => {
     setPaymentSuccess(true);
-    
+
+    // Build the order object to save in DB
     const orderData = {
       email: user.email,
       transactionId,
       items: cartItems.map((item) => ({
-        bookId: item.bookId,
+        bookId: item.bookId || item._id,
         title: item.title,
+        author: item.author,
         price: item.price,
         img: item.img,
-        author: item.author,
         quantity: item.quantity || 1,
       })),
-      total,
-      date: new Date().toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
+      total: total,
       status: "Processing",
     };
 
-    axiosInstance
-      .post("/orders", orderData)
-      .then(() => {
-        // Clear cart after successful payment
-        const deletePromises = cartItems.map((item) =>
-          axiosInstance.delete(`/carts/${item._id}`)
-        );
-        Promise.all(deletePromises).then(() => {
-          window.dispatchEvent(new Event("cartUpdated"));
-          setCartItems([]);
-        });
-      })
-      .catch((err) => console.error("Error creating order:", err));
+    try {
+      await axiosInstance.post("/orders", orderData);
+    } catch (err) {
+      console.error("Failed to save order:", err);
+    }
+
+    // Clear cart after successful payment
+    const deletePromises = cartItems.map((item) =>
+      axiosInstance.delete(`/carts/${item._id}`)
+    );
+    Promise.all(deletePromises).then(() => {
+      window.dispatchEvent(new Event("cartUpdated"));
+      setCartItems([]);
+    });
   };
 
   const subtotal = cartItems.reduce(
