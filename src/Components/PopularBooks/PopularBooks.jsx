@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { FaDollarSign, FaStar, FaShoppingCart, FaBookOpen } from "react-icons/fa";
+import { FaStar, FaShoppingCart, FaBookOpen } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -87,72 +87,92 @@ const PopularBooks = ({ popularBooks }) => {
       {/* Book Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 p-4">
         <div className="col-span-1 lg:col-span-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {popularBooks.map((book) => (
-            <div
-              key={book._id}
-              data-aos="fade-up"
-              onClick={() => navigate(`/book/${book._id}`)}
-              className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-pointer group h-[440px]"
-            >
-              <div>
-                {/* Image Container */}
-                <div className="relative overflow-hidden h-52 rounded-xl bg-gray-50 flex items-center justify-center p-3">
-                  <img
-                    src={book.img}
-                    alt={book.title}
-                    className="max-h-full max-w-full object-contain drop-shadow group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="bg-white/95 text-teal-700 text-xs font-bold px-3.5 py-2 rounded-full flex items-center gap-1.5 shadow-md">
-                      <FaBookOpen className="text-xs" /> View Details
+          {popularBooks.map((book) => {
+            const originalPrice = (parseFloat(book.price) * 1.1).toFixed(2);
+            return (
+              <div
+                key={book._id}
+                data-aos="fade-up"
+                onClick={() => navigate(`/book/${book._id}`)}
+                className="bg-white rounded-3xl border border-gray-100 p-4 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-pointer group h-[450px] relative overflow-hidden"
+              >
+                {/* Top thin line hover indicator */}
+                <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <div>
+                  {/* Image Container with Badge */}
+                  <div className="relative overflow-hidden h-52 rounded-2xl bg-gray-50 flex items-center justify-center p-3">
+                    {/* Hot Badge */}
+                    <span className="absolute top-3 left-3 bg-red-500 text-white text-[9px] uppercase font-extrabold tracking-widest px-2.5 py-1 rounded-full shadow-sm z-10">
+                      Popular
                     </span>
+
+                    <img
+                      src={book.img}
+                      alt={book.title}
+                      className="max-h-full max-w-full object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                    />
+
+                    {/* View Details Overlay */}
+                    <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="bg-white/95 text-slate-800 text-xs font-bold px-3.5 py-2 rounded-full flex items-center gap-1.5 shadow-md">
+                        <FaBookOpen className="text-xs text-teal-600" /> View Details
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Details */}
+                  <p className="text-xs text-teal-600 font-bold mt-4 mb-1 truncate">
+                    by {book.author}
+                  </p>
+
+                  <h3 className="font-extrabold text-slate-800 text-sm leading-snug line-clamp-2 min-h-[40px] mb-2 group-hover:text-teal-600 transition-colors">
+                    {book.title}
+                  </h3>
+
+                  {/* Rating Stars */}
+                  <div className="flex items-center gap-0.5 text-orange-400 text-[10px] mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className={i < Math.round(book.rating) ? "text-orange-400" : "text-gray-200"}
+                      />
+                    ))}
+                    <span className="text-slate-400 text-xs font-semibold ml-1">({book.rating})</span>
                   </div>
                 </div>
 
-                {/* Details */}
-                <p className="text-xs text-teal-600 font-semibold mt-4 mb-1 truncate">
-                  {book.author}
-                </p>
+                <div>
+                  {/* Price Row */}
+                  <div className="flex items-baseline gap-1.5 my-2">
+                    <span className="text-lg font-black text-slate-900">৳{book.price}</span>
+                    <span className="text-slate-400 line-through text-xs">৳{originalPrice}</span>
+                  </div>
 
-                <h3 className="font-extrabold text-slate-800 text-sm leading-snug line-clamp-2 min-h-[40px] mb-2">
-                  {book.title}
-                </h3>
-
-                {/* Rating */}
-                <div className="flex items-center gap-1 text-orange-400 text-xs mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar
-                      key={i}
-                      className={i < Math.round(book.rating) ? "text-orange-400" : "text-gray-200"}
-                    />
-                  ))}
-                  <span className="text-slate-400 text-xs font-medium ml-1">({book.rating})</span>
-                </div>
-              </div>
-
-              <div>
-                {/* Price and Cart Row */}
-                <div className="flex items-center justify-between border-t border-gray-50 pt-3 mt-2">
-                  <span className="text-base font-black text-slate-900">৳{book.price}</span>
-                  
+                  {/* Premium Add to Cart Button */}
                   <button
                     onClick={(e) => handleAddToCart(e, book)}
                     disabled={addingToCartId === book._id}
-                    className="w-9 h-9 rounded-xl bg-teal-50 hover:bg-teal-500 text-teal-600 hover:text-white flex items-center justify-center transition-all duration-200 shadow-sm"
-                    title="Add to Cart"
+                    className="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-xs shadow-sm hover:shadow-md"
                   >
-                    <FaShoppingCart size={13} />
+                    {addingToCartId === book._id ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <FaShoppingCart className="text-xs" /> ADD TO CART
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Side Offer Image */}
-        <div className="col-span-1 relative h-[440px] lg:h-auto overflow-hidden rounded-2xl group">
+        <div className="col-span-1 relative h-[450px] lg:h-auto overflow-hidden rounded-3xl group shadow-sm hover:shadow-lg transition-all duration-300">
           <img
-            className="h-full w-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500"
+            className="h-full w-full object-cover rounded-3xl group-hover:scale-105 transition-transform duration-500"
             src="https://i.ibb.co/7Cqj9df/h1-banner1.jpg"
             alt="Best Offer"
           />
