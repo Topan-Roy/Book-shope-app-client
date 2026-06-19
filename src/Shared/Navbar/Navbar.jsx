@@ -152,10 +152,15 @@ const Navbar = () => {
                             <div className="relative">
                                 <button
                                     onClick={() => setProfileOpen(!profileOpen)}
-                                    className=" lg:flex items-center gap-1 px-3 py-2 bg-gray-100 rounded-full hover:bg-gray-200"
+                                    className="lg:flex items-center gap-2 p-1 bg-gray-100 rounded-full hover:bg-gray-200 border border-gray-300 transition-colors"
                                 >
-                                    <FaUserCircle className="text-2xl text-gray-700" />
-                                    {/* <span className="  text-gray-700">{user.email.split("@")[0]}</span> */}
+                                    {user.photoURL ? (
+                                        <img src={user.photoURL} alt="profile" className="w-8 h-8 rounded-full object-cover shadow-sm border border-teal-500" />
+                                    ) : (
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                                            {user.email?.charAt(0).toUpperCase()}
+                                        </div>
+                                    )}
                                 </button>
 
                                 {profileOpen && (

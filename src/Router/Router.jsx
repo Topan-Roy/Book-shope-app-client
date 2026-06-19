@@ -13,6 +13,7 @@ import NotFound from "../Shared/NotFound/NotFound";
 import Books from "../Pages/Books/Books";
 import AddBook from "../Pages/Books/AddBook";
 import BookDetails from "../Pages/Books/BookDetails";
+import Dashboard from "../Pages/Dashboard/Dashboard";
 import Cart from "../Pages/Cart/Cart";
 
 export const router = createBrowserRouter([
@@ -59,6 +60,10 @@ export const router = createBrowserRouter([
         {
         path: "book/:id",
        Component:BookDetails
+      },
+        {
+        path: "dashboard",
+       Component:Dashboard
       },
         {
         path: "addbook",
