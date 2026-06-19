@@ -45,10 +45,11 @@ const Login = () => {
         return;
       }
 
+      const userRole = response.data.user.role || "user";
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: "Login Successful",
+        title: userRole === "admin" ? "Admin Login Successful!" : "User Login Successful!",
         showConfirmButton: false,
         timer: 1500,
       });
@@ -75,31 +76,43 @@ const Login = () => {
       const result = await googleLogin();
       const email = result.user.email;
 
+      let userRole = "user";
+
       // Check MongoDB server
-      const response = await axiosInstance.get(`/users/${email}`);
-      if (!response.data.user) {
-        // Optionally create user in MongoDB if not exists
-        await axiosInstance.post("/register", {
-          name: result.user.displayName,
-          email,
-          role: "user",
-        });
+      try {
+        const response = await axiosInstance.get(`/users/${email}`);
+        if (response.data.user) {
+          userRole = response.data.user.role;
+        }
+      } catch (checkErr) {
+        // If user not found (404), create them in the DB
+        if (checkErr.response && checkErr.response.status === 404) {
+          await axiosInstance.post("/register", {
+            name: result.user.displayName || "Google User",
+            email,
+            password: "GOOGLE_AUTH_DUMMY_PASSWORD",
+            role: "user",
+          });
+        } else {
+          throw checkErr; // Rethrow if it's a server error or network issue
+        }
       }
 
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: "Google Login Successful",
+        title: userRole === "admin" ? "Admin Google Login Successful!" : "User Google Login Successful!",
         showConfirmButton: false,
         timer: 1500,
       });
 
       navigate("/");
     } catch (err) {
-      console.error(err);
+      console.error("Google Login Catch Error:", err);
       Swal.fire({
         icon: "error",
         title: "Google Login Failed",
+        text: err?.response?.data?.message || err.message || "Unknown error",
       });
     } finally {
       setLoading(false);
