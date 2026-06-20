@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
-  
+
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
       if (currentUser && currentUser.email) {
         // Fetch JWT Token
         const userInfo = { email: currentUser.email };
-        axios.post('http://localhost:3000/jwt', userInfo)
+        axios.post('https://book-shope-app-server.onrender.com/jwt', userInfo)
           .then(res => {
             if (res.data.token) {
               localStorage.setItem('access-token', res.data.token);
@@ -60,7 +60,7 @@ const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  const authInfo = { user,setUser, loading, createUser, login, googleLogin, logOut };
+  const authInfo = { user, setUser, loading, createUser, login, googleLogin, logOut };
 
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

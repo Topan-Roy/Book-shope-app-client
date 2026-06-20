@@ -4,7 +4,7 @@ import { AuthContext } from "../Contexts/AuthProvider";
 import { useContext, useEffect } from "react";
 
 const axiosInstance = axios.create({
-    baseURL: `http://localhost:3000`
+    baseURL: `https://book-shope-app-server.onrender.com`
 });
 
 const useAxios = () => {

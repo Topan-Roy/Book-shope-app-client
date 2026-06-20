@@ -36,7 +36,7 @@ const AddBook = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:3000/books", bookData);
+      const res = await axios.post("https://book-shope-app-server.onrender.com/books", bookData);
 
       if (res.data.insertedId) {
         Swal.fire("Success!", "Book Added Successfully!", "success");

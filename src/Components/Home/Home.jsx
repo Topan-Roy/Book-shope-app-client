@@ -18,21 +18,21 @@ const Home = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:3000/books?category=Popular")
+            .get("https://book-shope-app-server.onrender.com/books?category=Popular")
             .then((res) => setPopularBooks(res.data))
             .catch((err) => console.log(err));
     }, []);
 
     useEffect(() => {
         axios
-            .get("http://localhost:3000/books?category=Religious")
+            .get("https://book-shope-app-server.onrender.com/books?category=Religious")
             .then((res) => setReligiousBooks(res.data))
             .catch((err) => console.log(err));
     }, []);
 
     useEffect(() => {
         axios
-            .get("http://localhost:3000/books?category=Child")
+            .get("https://book-shope-app-server.onrender.com/books?category=Child")
             .then((res) => setChildBooks(res.data))
             .catch((err) => console.log(err));
     }, []);
