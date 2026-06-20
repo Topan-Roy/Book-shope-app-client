@@ -31,6 +31,10 @@ const Books = () => {
   const [toast, setToast] = useState(null); // { book }
   const [wishlistedIds, setWishlistedIds] = useState({});
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const booksPerPage = 9;
+
   // Fetch Books
   useEffect(() => {
     axiosPublic
@@ -78,6 +82,7 @@ const Books = () => {
     }
 
     setBooks(filtered);
+    setCurrentPage(1); // Reset to first page on filter change
   }, [searchText, category, priceRange, minRating, allBooks]);
 
   const handleResetFilters = () => {
@@ -203,7 +208,7 @@ const Books = () => {
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* Left Filters Sidebar */}
         <aside className="w-full lg:w-64 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shrink-0">
-          
+
           {/* CATEGORY */}
           <div className="mb-6">
             <h4 className="text-xs uppercase font-extrabold tracking-wider text-slate-400 mb-3">Category</h4>
@@ -305,7 +310,7 @@ const Books = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {books.map((b) => {
+              {books.slice((currentPage - 1) * booksPerPage, currentPage * booksPerPage).map((b) => {
                 const originalPrice = (parseFloat(b.price) * 1.1).toFixed(2);
                 return (
                   <Link
@@ -384,11 +389,44 @@ const Books = () => {
 
           {/* Pagination */}
           {books.length > 0 && (
-            <div className="flex gap-3 justify-center py-10 mt-6">
-              <button className="px-4 py-2 border rounded-xl hover:bg-gray-50 transition-colors text-sm font-semibold text-gray-600">Previous</button>
-              <button className="px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-semibold">1</button>
-              <button className="px-4 py-2 border rounded-xl hover:bg-gray-50 transition-colors text-sm font-semibold text-gray-600">2</button>
-              <button className="px-4 py-2 border rounded-xl hover:bg-gray-50 transition-colors text-sm font-semibold text-gray-600">Next</button>
+            <div className="flex gap-3 justify-center py-10 mt-6 flex-wrap">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 border rounded-xl transition-colors text-sm font-semibold ${currentPage === 1
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed border-transparent"
+                    : "hover:bg-gray-50 text-gray-600 border-gray-200"
+                  }`}
+              >
+                Previous
+              </button>
+
+              {[...Array(Math.ceil(books.length / booksPerPage))].map((_, index) => {
+                const pageNum = index + 1;
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${currentPage === pageNum
+                        ? "bg-teal-600 text-white shadow-md border border-teal-600"
+                        : "border border-gray-200 text-gray-600 hover:bg-gray-50"
+                      }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(books.length / booksPerPage)))}
+                disabled={currentPage === Math.ceil(books.length / booksPerPage)}
+                className={`px-4 py-2 border rounded-xl transition-colors text-sm font-semibold ${currentPage === Math.ceil(books.length / booksPerPage)
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed border-transparent"
+                    : "hover:bg-gray-50 text-gray-600 border-gray-200"
+                  }`}
+              >
+                Next
+              </button>
             </div>
           )}
         </main>

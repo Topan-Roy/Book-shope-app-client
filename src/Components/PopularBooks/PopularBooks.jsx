@@ -16,6 +16,7 @@ const PopularBooks = ({ popularBooks }) => {
   
   const [toast, setToast] = useState(null); // { book }
   const [addingToCartId, setAddingToCartId] = useState(null);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     AOS.init({ once: true });
@@ -86,8 +87,9 @@ const PopularBooks = ({ popularBooks }) => {
 
       {/* Book Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 p-4">
-        <div className="col-span-1 lg:col-span-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {popularBooks.map((book) => {
+        <div className="col-span-1 lg:col-span-3 flex flex-col">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {(showAll ? popularBooks : popularBooks.slice(0, 8)).map((book) => {
             const originalPrice = (parseFloat(book.price) * 1.1).toFixed(2);
             return (
               <div
@@ -167,6 +169,18 @@ const PopularBooks = ({ popularBooks }) => {
               </div>
             );
           })}
+          </div>
+
+          {popularBooks.length > 8 && (
+            <div className="mt-8 flex justify-center">
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="btn rounded-3xl bg-[#F65D4E] hover:bg-red-500 border-none text-white px-10 py-2 shadow-sm hover:shadow-md transition-all duration-300"
+              >
+                {showAll ? "Less" : "More"}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Side Offer Image */}

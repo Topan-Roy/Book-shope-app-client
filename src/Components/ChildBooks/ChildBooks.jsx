@@ -16,6 +16,7 @@ const ChildBooks = ({ childBooks }) => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [addingToCart, setAddingToCart] = useState(false);
   const [toast, setToast] = useState(null);
+  const [showAll, setShowAll] = useState(false);
 
   const handleAddToCart = (book) => {
     if (!user || !user.email) {
@@ -53,20 +54,7 @@ const ChildBooks = ({ childBooks }) => {
       .finally(() => setAddingToCart(false));
   };
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 2200,
-    pauseOnHover: true,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 640, settings: { slidesToShow: 1 } },
-    ],
-  };
+
 
   if (!childBooks) return <Loading />;
 
@@ -104,60 +92,73 @@ const ChildBooks = ({ childBooks }) => {
             <p className="text-lg font-medium">No children's books available yet.</p>
           </div>
         ) : (
-          <Slider {...settings}>
-            {childBooks.map((book) => (
-              <div key={book._id} className="p-2 h-[410px]">
-                <div
-                  onClick={() => setSelectedBook(book)}
-                  className="rounded-xl overflow-hidden shadow-lg h-full flex flex-col cursor-pointer group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
-                >
-                  {/* Image */}
-                  <div className="relative overflow-hidden h-52">
-                    <img
-                      className="w-full h-full object-cover p-2 group-hover:scale-105 transition-transform duration-300"
-                      src={book.img}
-                      alt={book.title}
-                    />
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-orange-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <span className="bg-white/90 text-orange-600 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow">
-                        <FaBookOpen className="text-sm" /> View Details
-                      </span>
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {(showAll ? childBooks : childBooks.slice(0, 10)).map((book) => (
+                <div key={book._id} className="h-[410px]">
+                  <div
+                    onClick={() => setSelectedBook(book)}
+                    className="bg-white rounded-xl overflow-hidden shadow-lg h-full flex flex-col cursor-pointer group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                  >
+                    {/* Image */}
+                    <div className="relative overflow-hidden h-52">
+                      <img
+                        className="w-full h-full object-cover p-2 group-hover:scale-105 transition-transform duration-300"
+                        src={book.img}
+                        alt={book.title}
+                      />
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-orange-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span className="bg-white/90 text-orange-600 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow">
+                          <FaBookOpen className="text-sm" /> View Details
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Card Details */}
-                  <div className="px-4 py-2 flex-grow bg-white">
-                    <p className="text-gray-500 text-xs">
-                      <strong>Author:</strong> {book.author}
-                    </p>
-                    <p className="font-bold text-gray-800 text-base mt-1 mb-1 truncate">
-                      {book.title}
-                    </p>
-                    <div className="flex justify-between mb-2 mt-1">
-                      <p className="text-orange-500 text-sm font-bold">৳{book.price}</p>
-                      <p className="text-gray-500 flex items-center gap-1 text-sm">
-                        {book.rating} <FaStar className="text-orange-400" />
+                    {/* Card Details */}
+                    <div className="px-4 py-2 flex-grow bg-white">
+                      <p className="text-gray-500 text-xs">
+                        <strong>Author:</strong> {book.author}
+                      </p>
+                      <p className="font-bold text-gray-800 text-base mt-1 mb-1 truncate">
+                        {book.title}
+                      </p>
+                      <div className="flex justify-between mb-2 mt-1">
+                        <p className="text-orange-500 text-sm font-bold">৳{book.price}</p>
+                        <p className="text-gray-500 flex items-center gap-1 text-sm">
+                          {book.rating} <FaStar className="text-orange-400" />
+                        </p>
+                      </div>
+                      <p className="text-gray-500 text-xs">
+                        <strong>Category:</strong> {book.category}
                       </p>
                     </div>
-                    <p className="text-gray-500 text-xs">
-                      <strong>Category:</strong> {book.category}
-                    </p>
-                  </div>
 
-                  {/* Add to Cart Button */}
-                  <div className="px-4 pb-4 bg-white">
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleAddToCart(book); }}
-                      className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 w-full rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
-                    >
-                      <FaShoppingCart className="text-sm" /> ADD TO CART
-                    </button>
+                    {/* Add to Cart Button */}
+                    <div className="px-4 pb-4 bg-white">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleAddToCart(book); }}
+                        className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 w-full rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                      >
+                        <FaShoppingCart className="text-sm" /> ADD TO CART
+                      </button>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+
+            {childBooks.length > 10 && (
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className="btn rounded-3xl bg-orange-500 hover:bg-orange-600 border-none text-white px-10 py-2 shadow-sm hover:shadow-md transition-all duration-300"
+                >
+                  {showAll ? "Less" : "More"}
+                </button>
               </div>
-            ))}
-          </Slider>
+            )}
+          </>
         )}
       </div>
 
